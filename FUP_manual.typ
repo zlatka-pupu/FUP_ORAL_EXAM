@@ -17,17 +17,15 @@
   lang: "en"
 )
 
-// 2. Title & Author Block
 #align(center)[
-  #text(size: 24pt, weight: "bold")[FUP - ústna skúška] \
+  #text(size: 24pt, weight: "bold")[FUP - Oral Exam] \
   #v(5mm)
-  #text(size: 12pt, style: "italic")[neslusam] \
+  #text(size: 12pt, style: "italic")[neslusam and question providers] \
   
 ]
 
 #v(1cm)
 
-// 3. Outline / Table of Contents
 #outline(depth: 2, indent: 1.5em)
 
 #v(1cm)
@@ -42,7 +40,6 @@
 
 [H] What data types can fold be used on? 
 
-// 4. Content Sections
 = Racket
 
 [V] How to implement infinite stream of nats/ones 
@@ -76,10 +73,6 @@
 [H] reduce this expression (λx.x(λx.xx))e
 
 [V] Find all free/bound vars , redexes in Y-combinator. Apply $beta$-reduction and find normal form.
-
-
-
-
 
 
 = Haskell
