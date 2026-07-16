@@ -29,16 +29,17 @@
 //#let show-exam-answers = false
 
 #let question-answer(question, answer, show-answer: true) = [
-  #block(width: 100%, breakable: false,inset: (bottom: 1.2em))[
+  #block(width: 100%,inset: (bottom: 1.2em))[
     #set text(style: "italic")
     #question
     #if show-answer [
       #v(0.3em)
-      #rect(
+      #block(
         width: 100%, 
         stroke: (left: 2pt + rgb("#0066cc")), 
         fill: rgb("#f8fafd"), 
-        inset: 10pt
+        inset: 10pt,
+        breakable: true
       )[
         #set text(fill: rgb("#1a1a1a"),style: "normal")
         *Solution:* \ #answer
@@ -81,8 +82,8 @@
         fill: (col, row) => if row == 0 or col == 0 { rgb("#f5f5f5") } else { none },
 
       table.header([*order* \\ *purity*],[*Pure*],[*Impure*]) ,
-      [*First-Order*],[`circle_area r =  pi * r * r `] ,[`print x / getLine`],
-      [*Higher-order*],[`map / filter / fold / apply`],[`mapM / modify (State monad)` ]
+      [*First-Order*],[`circle_area r = pi * r * r`] ,[`print x / getLine`],
+      [*Higher-order*],[`map / filter / foldl / apply`],[`mapM / modify (State monad)` ]
       )
     ]
   ]
@@ -256,15 +257,20 @@ Solution: TODO
 #qa(
   [[V] Describe signature of function map.],
   [
-    (a -> b) -> [a] -> [b]
+    ```hs
+    map :: (a -> b) -> [a] -> [b]
+    ```  
   ] 
 
 
 )
 #qa(
-  [[V] Describe signature of function fold.],
+  [[V] Describe signature of function foldl/r.],
   [
-    (Foldable t, Monoid m) => t m -> m
+    ```hs
+    foldr :: Foldable t => (a -> b -> b) -> b -> t a -> b
+    foldl :: Foldable t => (b -> a -> b) -> b -> t a -> b
+    ```
   ]
 
 )
@@ -414,10 +420,71 @@ successExample = do
 #qa(
   [[H] What is a State Monad, what is it good for? How to implement bind for State Monad?],
   [
-    TODO
+    *State Monads simulate mutable state* in pure functional programming.
+    State is just a function that takes an initial state s, and returns a tuple containing the result a and a new state s.
+    ```hs 
+State s  a = s -> (a, s)
+    ```
+    *Even though a student has only been asked about bind*, I copied
+all the needed implementations from provided State.hs. In my opinion, the question about bind open possibilities to be asked about different functions.
+
+```hs
+  module State where
+
+-- My state
+newtype State s a = S { runState:: s -> (a, s) }
+
+
+instance Functor (State s) where
+--  Transforms the result value, but the state structure stays untouched
+  fmap :: (a -> b) -> State s a -> State s b
+  fmap f st = S (\s -> let (x,s') = runState st s
+                       in (f x,s'))
+
+instance Applicative (State s) where
+--  Puts a value into a state context without changing the state
+  pure :: a -> State s a
+  pure x = S (\s -> (x,s))
+
+-- Runs the first action to get a function, then passes the new state to get the value.
+  (<*>) :: State s (a -> b) -> State s a -> State s b
+  stf <*> stx = S (\s -> let (f,s') = runState stf s
+                             (x,s'') = runState stx s'
+                         in (f x, s''))
+
+instance Monad (State s) where
+-- Runs the first action, passes its result to 'f' to get a second action, and runs that
+  (>>=) :: State s a -> (a -> State s b) -> State s b
+  stx >>= f = S (\s -> let (x,s') = runState stx s
+                         in runState (f x) s')
+
+-- Converts a raw transition into the State type
+state :: (s -> (a,s)) -> State s a
+state = S
+
+-- Runs the computation and keeps only the value
+evalState :: State s a -> s -> a
+evalState st x = fst $ runState st x
+
+-- Runs the computation and keep only the state
+execState :: State s a -> s -> s
+execState st x = snd $ runState st x
+
+-- Duplicates the current state into the value slot: s -> (s, s)
+get :: State s s
+get = state (\x -> (x,x))
+
+-- Discards the old state and replaces it with x
+put :: s -> State s ()
+put x = state (\_ -> ((),x))
+
+-- Applies function 'f' directly to the background state: s -> ((), f s)
+modify :: (s -> s) -> State s ()
+modify f = do x <- get
+              put (f x)
+              return ()
+
+```
+    
   ]
 )
-
-
-
-
