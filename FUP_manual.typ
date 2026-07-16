@@ -187,32 +187,86 @@
   ]
 )
 #qa(
-  [[H/Z] What is a reduction and a redex?],
+  [[H/Z] What is a redex?],
   [
-Solution: TODO
+    A *redex* (reducible expression) is any term that *matches abstraction to an argument*. Imagine it like you have a function (abstraction) that already got the argument and can be evaluated. It is really easy to find in an abstract syntax tree. Redex is *every application , where the left argument is an abstraction (lambda symbol)*.
+
+    Example: *redexes are red* in this AST.
+#align(right)[
+    #image("resources/redex_showcase_color-all-red_step_00.png",height: 7cm)
+]
   ]
 )
 
 
 #qa(
-[[H] List and describe different types of reductions and their usage. (left right inner outer TODO:Remove)],
+[[H] What is a reduction? List and describe different types of reductions and their usage.  (left right inner outer TODO:Remove)],
 [
+  Reduction is the step-by-step process of *evaluating* or simplifying an expression *until it cannot be simplified any further*. 
 
-Solution: TODO  
+  The two essential transformation rules in lambda calculus are:
+
+  1.* $alpha$-conversion* - The process of *renaming a bound variable* (and all its occurrences inside the function body).Used to *prevent naming conflicts*
+
+
+  2.$beta$-reduction - The actual computation step. It applies a function to an argument by *substituting the argument for all free occurrences of the bound variable inside the function body*.
+
+  #pad(left: 1cm)[
+  There are *two* different strategies to evaluation:
+
+  *1. Left outermost* (Lazy evaluation) - furthest to the left and closest to the outside of the expression (*not contained inside any other redex*). 
+  
+  *2. Left innermost* (Eager evaluation) - furthest to the left but nested the deepest inside the expression (*it contains no other redexes inside itself*).
+  ]
+
+  Example: *Red - left outermost , blue - left innermost*
+
+  #align(right)[
+    #image("resources/inner_vs_outer_color-extremes_step_00.png",height: 7cm)
+]
   ]
 )
+
 
 #qa(
 [[V] What is a normal form and how to transform a $lambda$-expression to its normal form?],
 [
-Solution: TODO
+
+  Expression is in a *normal form*  if it cannot be simplified any further. You can transform expression into a normal form using *repeated left outermost $beta$-reductions* until there aren't left any.
+
+  Example: transformation of ($lambda$y. ay)(($lambda$ z. z)b) 
+  #grid(
+  columns: (1fr, 1fr, 1fr), 
+  gutter: 3em,
+  align: horizon,
+  
+  image("resources/redex_showcase_color-all_step_01.png", width:100%),
+  image("resources/redex_showcase_color-all_step_02.png", width:100%),
+  image("resources/redex_showcase_color-all_step_03.png", width:100%),
+)
+
+
+
+  Useful tips:
+
+  *Be aware of name collision! Perform $alpha$-conversion before reducing to keep variable names unique.*
+
+  *Some expression do not converge and do not have a normal form!* Example: ($lambda$x.xx)($lambda$x.xx)
+  
         ]
 )
 #qa(
 [[Z] What is the difference between bound and free variable? Which operation is done on them?],
 [
 
-  Solution: TODO
+  *Bound variable is inside of an abstraction, free  is not.*
+
+  Possible operations(probably what the teacher meant):
+
+  *Bound variable - $alpha$-conversion* - you can rename lambda and each instance in the body 
+
+  *Free variable - $beta$-reduction* - argument of a redex destroys the bound variables, only keeping the free ones. 
+
     ]
 )
 
@@ -220,7 +274,7 @@ Solution: TODO
   
 [[H] What is Church-Rosser theorem?],
 [
-Solution: TODO
+Solution: TODO brandsi1
     ]
 )
 
@@ -228,13 +282,37 @@ Solution: TODO
 #qa(
 [[H] how to represent True/False in $lambda$-Calculus?],
   [
-Solution: TODO
+    *T = $lambda$x$lambda$y.x *
+
+    *F = $lambda$x$lambda$y.y *
+
+    Basically, boolean is a *decision between 2 options* and you either picks the first one (T) or the second one (F)
+
   ]
 )
 #qa(
-[[H] how to represent number in $lambda$-Calculus? How to represent addition of 2 numbers?],
+[[H] How to represent number in $lambda$-Calculus? How to represent addition of 2 numbers?],
   [
-Solution: TODO
+  *Number n is represented as applying function `f` to starting `x` n-times.*
+
+  0 = $lambda$ f. $lambda$ x. x
+  1 = $lambda$ f. $lambda$ x. f(x)
+  2 = $lambda$ f. $lambda$ x. f(f(x))
+
+addition is defined as:
+
+*ADD = $lambda$ m. $lambda$ n. $lambda$ f. $lambda$ x. m  f (n f x) *
+
+Example: ADD 1 2 = $lambda$ f. $lambda$ x. 1  f (2 f x) - *Note! We already defined what 1 and 2 means.*
+
+so the (2 f x ) = f (f x) 
+
+we are left with 
+$lambda$ f. $lambda$ x. 1  f (f ( f x) )
+
+which is transformed back
+to $lambda$ f. $lambda$ x.  f (f ( f x) ) = *3*
+
   ]
 )
 #qa(
