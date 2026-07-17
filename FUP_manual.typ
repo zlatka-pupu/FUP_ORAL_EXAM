@@ -316,7 +316,7 @@ to $lambda$ f. $lambda$ x.  f (f ( f (x))) = *3*
 )
 #qa(
 [[H] reduce this expression (λx.x(λx.xx))e to its normal form.],
-  [ This reduction because is tricky, because there are *two abstractions with the same name*, i would generally recomend to rename one to prevent mistakes from happening. 
+  [ This reduction because is tricky, because there are *two abstractions with the same name*, i would generally recommend to rename one to prevent mistakes from happening. 
 
   #grid(
   columns: (1fr, 1fr), 
@@ -525,64 +525,16 @@ successExample = do
     ```hs 
 State s  a = s -> (a, s)
     ```
-    *Even though a student has only been asked about bind*, I copied
-all the needed implementations from provided State.hs. In my opinion, the question about bind open possibilities to be asked about different functions.
+    *Even though a student has only been asked about bind*, I highly recommend
+looking into State.hs provided in the official page. In my opinion, the question about bind open possibilities to be asked about different functions.
 
 ```hs
-  module State where
-
--- My state
-newtype State s a = S { runState:: s -> (a, s) }
-
-
-instance Functor (State s) where
---  Transforms the result value, but the state structure stays untouched
-  fmap :: (a -> b) -> State s a -> State s b
-  fmap f st = S (\s -> let (x,s') = runState st s
-                       in (f x,s'))
-
-instance Applicative (State s) where
---  Puts a value into a state context without changing the state
-  pure :: a -> State s a
-  pure x = S (\s -> (x,s))
-
--- Runs the first action to get a function, then passes the new state to get the value.
-  (<*>) :: State s (a -> b) -> State s a -> State s b
-  stf <*> stx = S (\s -> let (f,s') = runState stf s
-                             (x,s'') = runState stx s'
-                         in (f x, s''))
+newtype State s a = S { runState :: s -> (a, s) }
 
 instance Monad (State s) where
--- Runs the first action, passes its result to 'f' to get a second action, and runs that
-  (>>=) :: State s a -> (a -> State s b) -> State s b
-  stx >>= f = S (\s -> let (x,s') = runState stx s
-                         in runState (f x) s')
-
--- Converts a raw transition into the State type
-state :: (s -> (a,s)) -> State s a
-state = S
-
--- Runs the computation and keeps only the value
-evalState :: State s a -> s -> a
-evalState st x = fst $ runState st x
-
--- Runs the computation and keep only the state
-execState :: State s a -> s -> s
-execState st x = snd $ runState st x
-
--- Duplicates the current state into the value slot: s -> (s, s)
-get :: State s s
-get = state (\x -> (x,x))
-
--- Discards the old state and replaces it with x
-put :: s -> State s ()
-put x = state (\_ -> ((),x))
-
--- Applies function 'f' directly to the background state: s -> ((), f s)
-modify :: (s -> s) -> State s ()
-modify f = do x <- get
-              put (f x)
-              return ()
+  -- (>>=) :: State s a -> (a -> State s b) -> State s b
+  stx >>= f = S (\s -> let (x, s') = runState stx s
+                       in runState (f x) s')
 
 ```
     
