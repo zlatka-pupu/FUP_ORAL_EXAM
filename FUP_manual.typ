@@ -1,12 +1,11 @@
 #set page(
   paper: "a4",
   margin: (x: 2.5cm, top: 3cm, bottom: 2.5cm),
-  header: align(right, text(fill: gray, size: 9pt)[Typst Feature Showcase]),
   footer: [
     #set text(fill: gray, size: 9pt)
     #grid(
       columns: (1fr, 1fr),
-      [Draft Document],
+      [FUP BIBLE],
     align(right, context counter(page).display())    )
   ]
 )
@@ -47,6 +46,9 @@
     ]
   ]
 ]
+#show link: set text(fill: blue.darken(20%)) 
+#show link: underline
+
 #let qa = question-answer.with(show-answer: show-exam-answers)
 
 #v(1cm)
@@ -62,6 +64,7 @@
 = Introduction
 [V] - Tomáš Votroubek , [H] - Rostislav Horčík , [Z] - Matěj Zorek  *Your examiner is random, your previous lecturer doesn't make a difference.*
 
+There might be a newer version of this document, check out: #link("https://github.com/zlatka-pupu/FUP_ORAL_EXAM")[FUP Oral Exam GitHub Repository]
 
 
 
