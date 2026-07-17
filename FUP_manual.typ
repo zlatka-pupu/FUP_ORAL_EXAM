@@ -540,3 +540,7 @@ instance Monad (State s) where
     
   ]
 )
+
+*You are all done!* 
+
+#image("resources/happy_cat.gif")
