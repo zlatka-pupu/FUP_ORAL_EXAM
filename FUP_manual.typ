@@ -240,9 +240,9 @@
   gutter: 3em,
   align: horizon,
   
-  image("resources/redex_showcase_color-all_step_01.png", width:100%),
-  image("resources/redex_showcase_color-all_step_02.png", width:100%),
-  image("resources/redex_showcase_color-all_step_03.png", width:100%),
+  image("resources/normal_form_showcase_color-next_step_00.png",width:100%),
+  image("resources/normal_form_showcase_color-next_step_01.png",width:100%),
+  image("resources/normal_form_showcase_color-next_step_02.png",width:100%),
 )
 
 
@@ -286,7 +286,7 @@ Solution: TODO brandsi1
 
     *F = $lambda$x$lambda$y.y *
 
-    Basically, boolean is a *decision between 2 options* and you either picks the first one (T) or the second one (F)
+    Boolean is interpreted as a *decision between 2 options* and you either picks the first one (T) or the second one (F)
 
   ]
 )
@@ -301,32 +301,54 @@ Solution: TODO brandsi1
 
 addition is defined as:
 
-*ADD = $lambda$ m. $lambda$ n. $lambda$ f. $lambda$ x. m  f (n f x) *
+*ADD = $lambda$ m. $lambda$ n. $lambda$ f. $lambda$ x. m  f (n f (x)) *
 
-Example: ADD 1 2 = $lambda$ f. $lambda$ x. 1  f (2 f x) - *Note! We already defined what 1 and 2 means.*
+Example: ADD 1 2 = $lambda$ f. $lambda$ x. 1  f (2 f (x)) - *Note! We already defined what 1 and 2 means.*
 
-so the (2 f x ) = f (f x) 
+Argument of 1 f is  (2 f (x)) = f (f (x)) 
 
-we are left with 
-$lambda$ f. $lambda$ x. 1  f (f ( f x) )
-
+We are left with 
+$lambda$ f. $lambda$ x. 1  f (f ( f (x))),
 which is transformed back
-to $lambda$ f. $lambda$ x.  f (f ( f x) ) = *3*
+to $lambda$ f. $lambda$ x.  f (f ( f (x))) = *3*
 
   ]
 )
 #qa(
-[[H] reduce this expression (λx.x(λx.xx))e],
-  [
+[[H] reduce this expression (λx.x(λx.xx))e to its normal form.],
+  [ This reduction because is tricky, because there are *two abstractions with the same name*, i would generally recomend to rename one to prevent mistakes from happening. 
 
-Solution: TODO
+  #grid(
+  columns: (1fr, 1fr), 
+  gutter: 3em,
+  align: horizon,
+  
+  image("resources/omega_test_color-next_step_00.png",height: 7cm),
+  image("resources/omega_test_color-next_step_01.png",height: 7cm),
+
+  
+)
+
   ]
 )
 #qa(
-[[V] Find all free/bound vars , redexes in Y-combinator. Apply $beta$-reduction and find normal form.],
+[[V] Find all free/bound vars , redexes in ( $lambda$ f. ($lambda$ x. f (x x)) ($lambda$ x. f (x x))). Find normal form.],
+
+
   [
 
-Solution: TODO
+    *All variables are bound and there is only one redex *(marked red). After a few steps, it is obvious that the term *grows infinitely and thus doesn't have a normal form*.
+
+      #grid(
+  columns: (1fr, 1fr, 1fr), 
+  gutter: 3em,
+  align: horizon,
+  
+  image("resources/y_combinator_color-extremes_step_00.png"),
+  image("resources/y_combinator_color-extremes_step_01.png"),
+  image("resources/y_combinator_color-extremes_step_02.png"),
+)
+
   ]
 )
 
