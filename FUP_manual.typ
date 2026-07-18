@@ -64,7 +64,7 @@
 = Introduction
 [V] - Tomáš Votroubek , [H] - Rostislav Horčík , [Z] - Matěj Zorek  *Your examiner is random, your previous lecturer doesn't make a difference.*
 
-There might be a newer version of this document, check out: #link("https://github.com/zlatka-pupu/FUP_ORAL_EXAM")[FUP Oral Exam GitHub Repository]
+There might be a newer version of this document, check out this #link("https://github.com/zlatka-pupu/FUP_ORAL_EXAM")[github repository]
 
 
 
@@ -94,7 +94,7 @@ There might be a newer version of this document, check out: #link("https://githu
 
 #qa(
   [
-  [Z] List types of recursions based on branching factor + examples/classify head/tail recursion.
+  [Z] List types of recursions based on branching factor and provide examples. Classify head/ tail recursion and discuss theirs branching factor.
   ],
   [
   Recursion is split into *linear/tree recursion*.
@@ -103,7 +103,7 @@ There might be a newer version of this document, check out: #link("https://githu
 
   *Tree (Non-linear) recursion* makes *two or more* recursive calls per execution step. Example: *Fibonacci*
 
-  In *head recursion*, the recursive call is made *before* the rest of the function's operations are completed.
+  In *head recursion*, the recursive call is made *before* the rest of the function's operations are completed. Head recursion is *usually non-linear*, because linear recursion is faster with tail recursion.
 
   Example:
 
@@ -192,9 +192,9 @@ There might be a newer version of this document, check out: #link("https://githu
 #qa(
   [[H/Z] What is a redex?],
   [
-    A *redex* (reducible expression) is any term that *matches abstraction to an argument*. Imagine it like you have a function (abstraction) that already got the argument and can be evaluated. It is really easy to find in an abstract syntax tree. Redex is *every application , where the left argument is an abstraction (lambda symbol)*.
+    A *redex* (reducible expression) is any term that *matches abstraction to an argument*.It is similar to having a function (abstraction) that already got the argument and can be evaluated. It is really easy to find in an abstract syntax tree. Redex is *every application , where the left argument is an abstraction (lambda symbol)*.
 
-    Example: *redexes are red* in this AST.
+    Example: This AST has all the redexes marked red.
 #align(right)[
     #image("resources/redex_showcase_color-all-red_step_00.png",height: 7cm)
 ]
@@ -203,7 +203,7 @@ There might be a newer version of this document, check out: #link("https://githu
 
 
 #qa(
-[[H] What is a reduction? List and describe different types of reductions and their usage.  (left right inner outer TODO:Remove)],
+[[H] What is a reduction? List and describe different types of reductions and their usage.],
 [
   Reduction is the step-by-step process of *evaluating* or simplifying an expression *until it cannot be simplified any further*. 
 
@@ -277,7 +277,7 @@ There might be a newer version of this document, check out: #link("https://githu
   
 [[H] What is Church-Rosser theorem?],
 [
-Solution: TODO brandsi1
+  TODO brandsi1
     ]
 )
 
