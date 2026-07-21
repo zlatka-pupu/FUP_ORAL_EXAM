@@ -217,9 +217,9 @@ There might be a newer version of this document, check out this #link("https://g
   #pad(left: 1cm)[
   There are *two* different strategies to evaluation:
 
-  *1. Left outermost* (Lazy evaluation) - furthest to the left and closest to the outside of the expression (*not contained inside any other redex*). 
+  *1. Left outermost* (Lazy evaluation/normal order) - furthest to the left and closest to the outside of the expression (*not contained inside any other redex*).
   
-  *2. Left innermost* (Eager evaluation) - furthest to the left but nested the deepest inside the expression (*it contains no other redexes inside itself*).
+  *2. Left innermost* (Eager evaluation/applicative order) - furthest to the left but nested the deepest inside the expression (*it contains no other redexes inside itself*).
   ]
 
   Example: *Red - left outermost , blue - left innermost*
@@ -235,7 +235,7 @@ There might be a newer version of this document, check out this #link("https://g
 [[V] What is a normal form and how to transform a $lambda$-expression to its normal form?],
 [
 
-  Expression is in a *normal form*  if it cannot be simplified any further. You can transform expression into a normal form using *repeated left outermost $beta$-reductions* until there aren't left any.
+  Expression is in a *normal form* if it cannot be simplified any further -- it contains no redexes. You can transform an expression into its normal (if it exists) form using *repeated $beta$-reductions* until there are no redexes. The preferred evaluation order is *left outermost* (see Church-Rosser theorems to learn why).
 
   Example: transformation of ($lambda$y. ay)(($lambda$ z. z)b) 
   #grid(
@@ -274,11 +274,18 @@ There might be a newer version of this document, check out this #link("https://g
 )
 
 #qa(
-  
-[[H] What is Church-Rosser theorem?],
-[
-  TODO brandsi1
-    ]
+  [
+    [H] What are the Church-Rosser theorems?
+  ],
+  [
+    In the answers above, we have talked about different evaluation orders/strategies. That gives rise to two natural question. For a given term, do all evaluation orders produce the same normal form? Is the process of repeated $beta$-reduction guaranteed to terminate for all evaluation orders if the normal form exists? The Church-Rosser theorems give us the answer.
+
+  Explicitly, they state that
+    + Normal forms are independent of the evaluation strategy -- a lambda term cannot be reduced to two different normal forms.
+    + Normal order (lazy) evaluation always finds a normal form if it exists.
+
+    Informally, if we are to reduce a lambda term, normal order (lazy) evaluation is the way to go. It is guaranteed to produce a result (if the normal form exists) and the result is the same no matter the evaluation order.
+  ]
 )
 
 
