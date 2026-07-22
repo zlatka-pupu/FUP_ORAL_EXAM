@@ -554,6 +554,48 @@ instance Monad (State s) where
   ]
 )
 
+#qa(
+  [
+    [H] What are semigroups, monoids#footnote[*Monoids* are not to be confused with *monads*. That said, a monad is just a monoid in the category of endofunctors but one need not understand that in order to understand monoids and monads from a programming point of view.] and foldables?
+  ],
+  [
+    Given a list of `Int`s, we may want to fold such a list. One way to do so is to use the $+$ operation to combine the individual elements of the list. More abstractly, to perform a fold, we need a set, `Int`, and an operation that set, $+ : #raw("Int") times #raw("Int") -> #raw("Int")$. Having this operation be associative (which `+` is) makes `foldl` and `foldr` produce the same result. This idea can be further abstracted and formalized as a semigroup.
+
+    A semigroup $SS = (S, sun)$ is a set $S$ and an operation $sun : S times S -> S$ satisfying associativity,
+    $
+    (x space sun space y) space sun space z = x space sun space (y space sun space z)
+    $
+    for all $x, y, z in S$. In Haskell, a semigroup is defined as
+    ```hs
+    class Semigroup a where
+      (<>) :: a -> a -> a
+    ```
+    As usual, this definition does not explicitly require associativity as Haskell's type system is not strong enough to express it.
+
+    Another thing worth noticing is that we want to be able to fold an empty list which requires a "default" value. We also expect this value to not influence the folding of a nonempty list. For natural numbers we use $0$ as such value which is the identity element w.r.t. the operation $+$. This idea may be abstracted as having an identity element $u$ w.r.t. the $sun$ operation.
+
+    A monoid $MM = (M, sun, u)$ is the semigroup $(M, sun)$ satisfying
+    $
+    u space sun space x = x = x space sun space u,
+    $
+    for all $x in M$. In Haskell, a monoid is defined in the following way
+    ```hs
+    class Semigroup a => Monoid a where
+      mempty :: a
+    ```
+    The `mempty` here represents the unit $u$ from the mathematical definition from above.
+
+    So far, we have abstracted the way a fold aggregates but we are yet to abstract the traversal of a list. The idea here is that if we want to fold a data structure whose elements ore of type $A$ using the monoid $MM = (M, sun, u)$, all we need is a function $f : A -> M$. To give an example, given a list of type `[a]` and a #raw("Monoid m", lang: "hs"), to fold such a list, we only need a function #raw("f : a -> m", lang: "hs"). The function `f` allows us to convert all elements of the list to `m`s and then fold those using the operation of the monoid and its unit. This is idea is formalized in the definition of a `Foldable`:
+    ```hs
+    type Foldable :: (* -> *) -> Constraint
+    class Foldable t where
+      foldMap :: Monoid m => (a -> m) -> t a -> m
+      ...
+    ```
+    The foldable class provides default implementations for many other useful functions besides `foldMap` such as `fold`, `length` etc.
+  ]
+)
+
 *You are all done!* 
 
 #image("resources/happy_cat.gif")
