@@ -24,8 +24,11 @@
 ]
 
 
-#let show-exam-answers = true
-//#let show-exam-answers = false
+#let show-exam-answers = if sys.inputs.at("answers", default: false) == "false" {
+  false
+} else {
+  true
+}
 
 #let question-answer(question, answer, show-answer: true) = [
   #block(width: 100%,inset: (bottom: 1.2em))[
