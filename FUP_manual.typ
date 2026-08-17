@@ -5,54 +5,50 @@
     #set text(fill: gray, size: 9pt)
     #grid(
       columns: (1fr, 1fr),
-      [FUP BIBLE],
-    align(right, context counter(page).display())    )
-  ]
+      [FUP BIBLE], align(right, context counter(page).display()),
+    )
+  ],
 )
 
 #set text(
   font: "new computer modern",
   size: 11pt,
-  lang: "en"
+  lang: "en",
 )
 
 #align(center)[
   #text(size: 24pt, weight: "bold")[FUP - Oral Exam] \
   #v(5mm)
   #text(size: 12pt, style: "italic")[neslusam and question providers] \
-  
 ]
 
 
-#let show-exam-answers = if sys.inputs.at("answers", default: false) == "false" {
-  false
-} else {
-  true
-}
+#let show-exam-answers = sys.inputs.at("answers", default: false) == "false"
 
 #let question-answer(question, answer, show-answer: true) = [
-  #block(width: 100%,inset: (bottom: 1.2em))[
+  #block(width: 100%, inset: (bottom: 1.2em))[
     #set text(style: "italic")
     #question
     #if show-answer [
       #v(0.3em)
       #block(
-        width: 100%, 
-        stroke: (left: 2pt + rgb("#0066cc")), 
-        fill: rgb("#f8fafd"), 
+        width: 100%,
+        stroke: (left: 2pt + rgb("#0066cc")),
+        fill: rgb("#f8fafd"),
         inset: 10pt,
-        breakable: true
+        breakable: true,
       )[
-        #set text(fill: rgb("#1a1a1a"),style: "normal")
+        #set text(fill: rgb("#1a1a1a"), style: "normal")
         *Solution:* \ #answer
       ]
     ]
   ]
 ]
-#show link: set text(fill: blue.darken(20%)) 
-#show link: underline
 
 #let qa = question-answer.with(show-answer: show-exam-answers)
+
+#show link: set text(fill: blue.darken(20%))
+#show link: underline
 
 #v(1cm)
 
@@ -61,16 +57,12 @@
 #v(1cm)
 
 #text(fill: rgb("#cc0000"))[ #emoji.warning
-*TRIGGER WARNING -  M\*NAD* #emoji.warning] - The text below contains repeated, explicit occurences of the "M-Word".If you are currently recovering from trying to understand what  a m*nad actually is, further review of this material is not recommended..
-
+  *TRIGGER WARNING -  M\*NAD* #emoji.warning] - The text below contains repeated, explicit occurences of the "M-Word".If you are currently recovering from trying to understand what  a m*nad actually is, further review of this material is not recommended...
 
 = Introduction
-[V] - Tomáš Votroubek , [H] - Rostislav Horčík , [Z] - Matěj Zorek  *Your examiner is random, your previous lecturer doesn't make a difference.*
+[V] - Tomáš Votroubek, [H] - Rostislav Horčík, [Z] - Matěj Zorek *Your examiner is random, your previous lecturer doesn't make a difference.*
 
 There might be a newer version of this document, check out this #link("https://github.com/zlatka-pupu/FUP_ORAL_EXAM")[github repository]
-
-
-
 
 = Functional Programming
 #qa(
@@ -82,115 +74,118 @@ There might be a newer version of this document, check out this #link("https://g
 
     #align(center)[
       #table(
-        columns: (1.5fr,2.0fr,2.0fr),
-        align: (col,row) => if col == 0 or row==0 {center + horizon} else {left + horizon},
+        columns: (1.5fr, 2.0fr, 2.0fr),
+        align: (col, row) => if col == 0 or row == 0 { center + horizon } else {
+          left + horizon
+        },
         stroke: 0.5pt + rgb("#b0b0b0"),
-        fill: (col, row) => if row == 0 or col == 0 { rgb("#f5f5f5") } else { none },
+        fill: (col, row) => if row == 0 or col == 0 { rgb("#f5f5f5") } else {
+          none
+        },
 
-      table.header([*order* \\ *purity*],[*Pure*],[*Impure*]) ,
-      [*First-Order*],[`circle_area r = pi * r * r`] ,[`print x / getLine`],
-      [*Higher-order*],[`map / filter / foldl / apply`],[`mapM / modify (State monad)` ]
+        table.header([*order* \\ *purity*], [*Pure*], [*Impure*]),
+        [*First-Order*], [`circle_area r = pi * r * r`], [`print x / getLine`],
+        [*Higher-order*],
+        [`map / filter / foldl / apply`],
+        [`mapM / modify (State monad)` ],
       )
     ]
-  ]
+  ],
 )
 
 #qa(
   [
-  [Z] List types of recursions based on branching factor and provide examples. Classify head/ tail recursion and discuss theirs branching factor.
+    [Z] List types of recursions based on branching factor and provide examples. Classify head/ tail recursion and discuss theirs branching factor.
   ],
   [
-  Recursion is split into *linear/tree recursion*.
+    Recursion is split into *linear/tree recursion*.
 
-  *Linear recursion* makes *one* recursive call per execution step. Example: *Factorial*
+    *Linear recursion* makes *one* recursive call per execution step. Example: *Factorial*
 
-  *Tree (Non-linear) recursion* makes *two or more* recursive calls per execution step. Example: *Fibonacci*
+    *Tree (Non-linear) recursion* makes *two or more* recursive calls per execution step. Example: *Fibonacci*
 
-  In *head recursion*, the recursive call is made *before* the rest of the function's operations are completed. Head recursion is *usually non-linear*, because linear recursion is faster with tail recursion.
+    In *head recursion*, the recursive call is made *before* the rest of the function's operations are completed. Head recursion is *usually non-linear*, because linear recursion is faster with tail recursion.
 
-  Example:
+    Example:
 
-  ```hs
-  factorialHead 0 = 1
-  factorialHead n = n * factorialHead (n - 1)
+    ```hs
+    factorialHead 0 = 1
+    factorialHead n = n * factorialHead (n - 1)
 
-  ```
+    ```
 
-  In *tail recursion* the recursive call is the *very last* operation executed by the function. It often uses an *accumulator*. Tail recursion is always *linear*.
+    In *tail recursion* the recursive call is the *very last* operation executed by the function. It often uses an *accumulator*. Tail recursion is always *linear*.
 
-  Example:
+    Example:
 
-  ```hs
-  factorialTail 0 acc = acc
-  factorialTail n acc = factorialTail (n - 1) (n * acc)
-  ```
-  ]
+    ```hs
+    factorialTail 0 acc = acc
+    factorialTail n acc = factorialTail (n - 1) (n * acc)
+    ```
+  ],
 )
 
 = Racket
 #qa(
   [
-  [V] How to implement infinite stream of nats/ones 
-  #pad(left: 2em)[
-    1. using stream functions?
+    [V] How to implement infinite stream of nats/ones
+    #pad(left: 2em)[
+      1. using stream functions?
 
-    2. without using stream functions?
-  ]
+      2. without using stream functions?
+    ]
 
   ],
   [
-  1.  Example - stream of natural numbers using stream-cons
-  ```rkt
-  (define (stream_nats n)
-  (stream-cons n (stream_nats (+ n 1))))
+    1. Example - stream of natural numbers using stream-cons
+    ```rkt
+    (define (stream_nats n)
+    (stream-cons n (stream_nats (+ n 1))))
 
-  ```
-  2.
-  ```Racket
-  (define (nats_lambda n)
-    (cons n (lambda () (nats_lambda (+ n 1)))))
+    ```
+    2.
+    ```Racket
+    (define (nats_lambda n)
+      (cons n (lambda () (nats_lambda (+ n 1)))))
 
-  ;;for extra points use syntantic sugar thunk ;)
+    ;;for extra points use syntantic sugar thunk ;)
 
-  (define (nats_thunk n)
-    (cons n (thunk (nats_thunk (+ n 1)))))
+    (define (nats_thunk n)
+      (cons n (thunk (nats_thunk (+ n 1)))))
 
-  ```
-  ]
+    ```
+  ],
 )
 #qa(
-  
   [[V] Describe how does foldl/foldr work, which parametres are used and what is the difference between foldl and foldr. ],
+  [
+    *Foldl/r collapses a list into a single value*, combining its elements with an accumulator from left to right (foldl) / from right to left (foldr).
 
-[
-  *Foldl/r collapses a list into a single value*, combining its elements with an accumulator from left to right (foldl) / from right to left (foldr).
+    Example:
 
-  Example:
+    ```rkt
+    (foldl append '() '((1 2) (3 4) (5 6)))
+    ;; Output: '(5 6 3 4 1 2)
 
-  ```rkt
-  (foldl append '() '((1 2) (3 4) (5 6)))
-  ;; Output: '(5 6 3 4 1 2)
+    (foldr append '() '((1 2) (3 4) (5 6)))
+    ;; Output: '(1 2 3 4 5 6)
 
-  (foldr append '() '((1 2) (3 4) (5 6)))
-  ;; Output: '(1 2 3 4 5 6)
-
-  ```
-  ]
+    ```
+  ],
 )
 
 = $lambda$-Calculus
 #qa(
-
   [[Z] List and describe terms in syntax of $lambda$-calculus.],
   [
-  The syntax of lambda calculus has only three types of terms: a *variable* (denoted by lowercase letters x,y,z...
-  ), the *abstraction* of a variable 
-  from a term 
-  defining a function (denoted as $lambda$x.t
-  ), and the *application* of a term 
-  to a term (e.g.  xy , ($lambda$x.y)y , ...).
-  
-  ]
+    The syntax of lambda calculus has only three types of terms: a *variable* (denoted by lowercase letters x,y,z...
+    ), the *abstraction* of a variable
+    from a term
+    defining a function (denoted as $lambda$x.t
+    ), and the *application* of a term
+    to a term (e.g.  xy , ($lambda$x.y)y , ...).
+
+  ],
 )
 #qa(
   [[H/Z] What is a redex?],
@@ -198,82 +193,85 @@ There might be a newer version of this document, check out this #link("https://g
     A *redex* (reducible expression) is any term that *matches abstraction to an argument*.It is similar to having a function (abstraction) that already got the argument and can be evaluated. It is really easy to find in an abstract syntax tree. Redex is *every application , where the left argument is an abstraction (lambda symbol)*.
 
     Example: This AST has all the redexes marked red.
-#align(right)[
-    #image("resources/redex_showcase_color-all-red_step_00.png",height: 7cm)
-]
-  ]
-)
-
-
-#qa(
-[[H] What is a reduction? List and describe different types of reductions and their usage.],
-[
-  Reduction is the step-by-step process of *evaluating* or simplifying an expression *until it cannot be simplified any further*. 
-
-  The two essential transformation rules in lambda calculus are:
-
-  1.* $alpha$-conversion* - The process of *renaming a bound variable* (and all its occurrences inside the function body).Used to *prevent naming conflicts*
-
-
-  2.$beta$-reduction - The actual computation step. It applies a function to an argument by *substituting the argument for all free occurrences of the bound variable inside the function body*.
-
-  #pad(left: 1cm)[
-  There are *two* different strategies to evaluation:
-
-  *1. Left outermost* (Lazy evaluation/normal order) - furthest to the left and closest to the outside of the expression (*not contained inside any other redex*).
-  
-  *2. Left innermost* (Eager evaluation/applicative order) - furthest to the left but nested the deepest inside the expression (*it contains no other redexes inside itself*).
-  ]
-
-  Example: *Red - left outermost , blue - left innermost*
-
-  #align(right)[
-    #image("resources/inner_vs_outer_color-extremes_step_00.png",height: 7cm)
-]
-  ]
-)
-
-
-#qa(
-[[V] What is a normal form and how to transform a $lambda$-expression to its normal form?],
-[
-
-  Expression is in a *normal form* if it cannot be simplified any further -- it contains no redexes. You can transform an expression into its normal (if it exists) form using *repeated $beta$-reductions* until there are no redexes. The preferred evaluation order is *left outermost* (see Church-Rosser theorems to learn why).
-
-  Example: transformation of ($lambda$y. ay)(($lambda$ z. z)b) 
-  #grid(
-  columns: (1fr, 1fr, 1fr), 
-  gutter: 3em,
-  align: horizon,
-  
-  image("resources/normal_form_showcase_color-next_step_00.png",width:100%),
-  image("resources/normal_form_showcase_color-next_step_01.png",width:100%),
-  image("resources/normal_form_showcase_color-next_step_02.png",width:100%),
-)
-
-
-
-  Useful tips:
-
-  *Be aware of name collision! Perform $alpha$-conversion before reducing to keep variable names unique.*
-
-  *Some expression do not converge and do not have a normal form!* Example: ($lambda$x.xx)($lambda$x.xx)
-  
-        ]
-)
-#qa(
-[[Z] What is the difference between bound and free variable? Which operation is done on them?],
-[
-
-  *Bound variable is inside of an abstraction, free  is not.*
-
-  Possible operations(probably what the teacher meant):
-
-  *Bound variable - $alpha$-conversion* - you can rename lambda and each instance in the body 
-
-  *Free variable - $beta$-reduction* - argument of a redex destroys the bound variables, only keeping the free ones. 
-
+    #align(right)[
+      #image("resources/redex_showcase_color-all-red_step_00.png", height: 7cm)
     ]
+  ],
+)
+
+
+#qa(
+  [[H] What is a reduction? List and describe different types of reductions and their usage.],
+  [
+    Reduction is the step-by-step process of *evaluating* or simplifying an expression *until it cannot be simplified any further*.
+
+    The two essential transformation rules in lambda calculus are:
+
+    1.* $alpha$-conversion* - The process of *renaming a bound variable* (and all its occurrences inside the function body).Used to *prevent naming conflicts*
+
+
+    2.$beta$-reduction - The actual computation step. It applies a function to an argument by *substituting the argument for all free occurrences of the bound variable inside the function body*.
+
+    #pad(left: 1cm)[
+      There are *two* different strategies to evaluation:
+
+      *1. Left outermost* (Lazy evaluation/normal order) - furthest to the left and closest to the outside of the expression (*not contained inside any other redex*).
+
+      *2. Left innermost* (Eager evaluation/applicative order) - furthest to the left but nested the deepest inside the expression (*it contains no other redexes inside itself*).
+    ]
+
+    Example: *Red - left outermost , blue - left innermost*
+
+    #align(right)[
+      #image("resources/inner_vs_outer_color-extremes_step_00.png", height: 7cm)
+    ]
+  ],
+)
+
+
+#qa(
+  [[V] What is a normal form and how to transform a $lambda$-expression to its normal form?],
+  [
+    Expression is in a *normal form* if it cannot be simplified any further -- it contains no redexes. You can transform an expression into its normal (if it exists) form using *repeated $beta$-reductions* until there are no redexes. The preferred evaluation order is *left outermost* (see Church-Rosser theorems to learn why).
+
+    Example: transformation of ($lambda$y. ay)(($lambda$ z. z)b)
+    #grid(
+      columns: (1fr, 1fr, 1fr),
+      gutter: 3em,
+      align: horizon,
+
+      image(
+        "resources/normal_form_showcase_color-next_step_00.png",
+        width: 100%,
+      ),
+      image(
+        "resources/normal_form_showcase_color-next_step_01.png",
+        width: 100%,
+      ),
+      image(
+        "resources/normal_form_showcase_color-next_step_02.png",
+        width: 100%,
+      ),
+    )
+
+    Useful tips:
+
+    *Be aware of name collision! Perform $alpha$-conversion before reducing to keep variable names unique.*
+
+    *Some expression do not converge and do not have a normal form!* Example: ($lambda$x.xx)($lambda$x.xx)
+  ],
+)
+#qa(
+  [[Z] What is the difference between bound and free variable? Which operation is done on them?],
+  [
+    *Bound variable is inside of an abstraction, free  is not.*
+
+    Possible operations(probably what the teacher meant):
+
+    *Bound variable - $alpha$-conversion* - you can rename lambda and each instance in the body
+
+    *Free variable - $beta$-reduction* - argument of a redex destroys the bound variables, only keeping the free ones.
+  ],
 )
 
 #qa(
@@ -283,86 +281,78 @@ There might be a newer version of this document, check out this #link("https://g
   [
     In the answers above, we have talked about different evaluation orders/strategies. That gives rise to two natural question. For a given term, do all evaluation orders produce the same normal form? Is the process of repeated $beta$-reduction guaranteed to terminate for all evaluation orders if the normal form exists? The Church-Rosser theorems give us the answer.
 
-  Explicitly, they state that
+    Explicitly, they state that
     + Normal forms are independent of the evaluation strategy -- a lambda term cannot be reduced to two different normal forms.
     + Normal order (lazy) evaluation always finds a normal form if it exists.
 
     Informally, if we are to reduce a lambda term, normal order (lazy) evaluation is the way to go. It is guaranteed to produce a result (if the normal form exists) and the result is the same no matter the evaluation order.
-  ]
+  ],
 )
 
 
 #qa(
-[[H] how to represent True/False in $lambda$-Calculus?],
+  [[H] how to represent True/False in $lambda$-Calculus?],
   [
     *T = $lambda$x$lambda$y.x *
 
     *F = $lambda$x$lambda$y.y *
 
     Boolean is interpreted as a *decision between 2 options* and you either picks the first one (T) or the second one (F)
-
-  ]
+  ],
 )
 #qa(
-[[H] How to represent number in $lambda$-Calculus? How to represent addition of 2 numbers?],
+  [[H] How to represent number in $lambda$-Calculus? How to represent addition of 2 numbers?],
   [
-  *Number n is represented as applying function `f` to starting `x` n-times.*
+    *Number n is represented as applying function `f` to starting `x` n-times.*
 
-  0 = $lambda$ f. $lambda$ x. x
-  1 = $lambda$ f. $lambda$ x. f(x)
-  2 = $lambda$ f. $lambda$ x. f(f(x))
+    0 = $lambda$ f. $lambda$ x. x
+    1 = $lambda$ f. $lambda$ x. f(x)
+    2 = $lambda$ f. $lambda$ x. f(f(x))
 
-addition is defined as:
+    addition is defined as:
 
-*ADD = $lambda$ m. $lambda$ n. $lambda$ f. $lambda$ x. m  f (n f (x)) *
+    *ADD = $lambda$ m. $lambda$ n. $lambda$ f. $lambda$ x. m  f (n f (x)) *
 
-Example: ADD 1 2 = $lambda$ f. $lambda$ x. 1  f (2 f (x)) - *Note! We already defined what 1 and 2 means.*
+    Example: ADD 1 2 = $lambda$ f. $lambda$ x. 1  f (2 f (x)) - *Note! We already defined what 1 and 2 means.*
 
-Argument of 1 f is  (2 f (x)) = f (f (x)) 
+    Argument of 1 f is  (2 f (x)) = f (f (x))
 
-We are left with 
-$lambda$ f. $lambda$ x. 1  f (f ( f (x))),
-which is transformed back
-to $lambda$ f. $lambda$ x.  f (f ( f (x))) = *3*
-
-  ]
+    We are left with
+    $lambda$ f. $lambda$ x. 1  f (f ( f (x))),
+    which is transformed back
+    to $lambda$ f. $lambda$ x.  f (f ( f (x))) = *3*
+  ],
 )
 #qa(
-[[H] reduce this expression (λx.x(λx.xx))e to its normal form.],
-  [ This reduction because is tricky, because there are *two abstractions with the same name*, i would generally recommend to rename one to prevent mistakes from happening. 
-
-  #grid(
-  columns: (1fr, 1fr), 
-  gutter: 3em,
-  align: horizon,
-  
-  image("resources/omega_test_color-next_step_00.png",height: 7cm),
-  image("resources/omega_test_color-next_step_01.png",height: 7cm),
-
-  
-)
-
-  ]
-)
-#qa(
-[[V] Find all free/bound vars , redexes in ( $lambda$ f. ($lambda$ x. f (x x)) ($lambda$ x. f (x x))). Find normal form.],
-
-
+  [[H] reduce this expression (λx.x(λx.xx))e to its normal form.],
   [
+    This reduction because is tricky, because there are *two abstractions with the same name*, i would generally recommend to rename one to prevent mistakes from happening.
 
+    #grid(
+      columns: (1fr, 1fr),
+      gutter: 3em,
+      align: horizon,
+
+      image("resources/omega_test_color-next_step_00.png", height: 7cm),
+      image("resources/omega_test_color-next_step_01.png", height: 7cm),
+    )
+  ],
+)
+#qa(
+  [[V] Find all free/bound vars , redexes in ( $lambda$ f. ($lambda$ x. f (x x)) ($lambda$ x. f (x x))). Find normal form.],
+  [
     *All variables are bound and there is only one redex *(marked red). After a few steps, it is obvious that the term *grows infinitely and thus doesn't have a normal form*.
 
-      #grid(
-  columns: (1fr, 1fr, 1fr), 
-  gutter: 3em,
-  align: horizon,
-  
-  image("resources/y_combinator_color-extremes_step_00.png"),
-  image("resources/y_combinator_color-extremes_step_01.png"),
-  image("resources/y_combinator_color-extremes_step_02.png"),
-)
+    #grid(
+      columns: (1fr, 1fr, 1fr),
+      gutter: 3em,
+      align: horizon,
 
-  ]
+      image("resources/y_combinator_color-extremes_step_00.png"),
+      image("resources/y_combinator_color-extremes_step_01.png"),
+      image("resources/y_combinator_color-extremes_step_02.png"),
+    )
+  ],
 )
 
 = Haskell
@@ -372,10 +362,8 @@ to $lambda$ f. $lambda$ x.  f (f ( f (x))) = *3*
   [
     ```hs
     map :: (a -> b) -> [a] -> [b]
-    ```  
-  ] 
-
-
+    ```
+  ],
 )
 #qa(
   [[V] Describe signature of function foldl/r.],
@@ -384,8 +372,7 @@ to $lambda$ f. $lambda$ x.  f (f ( f (x))) = *3*
     foldr :: Foldable t => (a -> b -> b) -> b -> t a -> b
     foldl :: Foldable t => (b -> a -> b) -> b -> t a -> b
     ```
-  ]
-
+  ],
 )
 
 #qa(
@@ -394,96 +381,87 @@ to $lambda$ f. $lambda$ x.  f (f ( f (x))) = *3*
     *Typeclass is a sort of interface that defines some behavior*. Typeclasses enable functions to work on different types while supporting certain operations.
 
     For a custom data type , you can usually derive some typeclasses: `Eq, Ord, Enum, Bounded, Show, Read`. If this is not the case, you need to implement it yourself ;).
-  ]
-
-
+  ],
 )
 
 #qa(
   [[H] How to implement polymorphic typeclass , which adds 1 to an Int and prints out length for String?],
-
   [
-
     You need to create a polymorphic typeclass with a single method that *returns IO monad*.
     ```hs
-class Magnesium a where
-  wheatBran :: a -> IO ()
+    class Magnesium a where
+      wheatBran :: a -> IO ()
 
-instance Magnesium Int where
-  wheatBran n = do
-    let next = n + 1
-    print next
+    instance Magnesium Int where
+      wheatBran n = do
+        let next = n + 1
+        print next
 
-instance Magnesium String where
-  wheatBran str = do
-    let len = length str
-    print len
+    instance Magnesium String where
+      wheatBran str = do
+        let len = length str
+        print len
     ```
-  ]
+  ],
 )
 #qa(
   [[V] What is Functor typeclass?  Which functions define it?],
   [
-      *Functor is any data type which can be mapped over*. It enables applying pure functions without changing the structure.
+    *Functor is any data type which can be mapped over*. It enables applying pure functions without changing the structure.
 
-      *Core function*: `fmap :: (a -> b) -> f a -> f b` ( or the `<$>` operator)
+    *Core function*: `fmap :: (a -> b) -> f a -> f b` ( or the `<$>` operator)
 
-      Example: 
-      ```hs 
-addOne = fmap (+1)
+    Example:
+    ```hs
+    addOne = fmap (+1)
 
-addOne (Map.fromList [('a',1), ('b',2)])
---Output: Map.fromList [('a',2), ('b',3)]
-      ```
-
-  ]
+    addOne (Map.fromList [('a',1), ('b',2)])
+    --Output: Map.fromList [('a',2), ('b',3)]
+    ```
+  ],
 )
 #qa(
-
   [[V] What is a Applicative typeclass? Which functions define it?],
   [
-      Applicative typeclass *extends Functor* typeclass. With a Functor, you use `<$>` to map a normal function over a wrapped value.
-      With a * Applicative* typeclass, you can *apply a function that is already wrapped to a value that is also wrapped* using `<*>`, called *apply* or *ap*.
+    Applicative typeclass *extends Functor* typeclass. With a Functor, you use `<$>` to map a normal function over a wrapped value.
+    With a * Applicative* typeclass, you can *apply a function that is already wrapped to a value that is also wrapped* using `<*>`, called *apply* or *ap*.
 
-      Another function of applicative typeclass is to *wrap in the simplest way possible* into a certain data type, using the function *pure*.
+    Another function of applicative typeclass is to *wrap in the simplest way possible* into a certain data type, using the function *pure*.
 
-      *Core functions*:
+    *Core functions*:
 
-      ```hs
-pure :: a -> f a
+    ```hs
+    pure :: a -> f a
 
-(<*>) :: f (a -> b) -> f a -> f b
-      ```
+    (<*>) :: f (a -> b) -> f a -> f b
+    ```
 
+    Examples:
+    ```hs
+    -- fmap fails here, because the function is wrapped
+    Just (+10) <$> Just 5  -- Result: Error
 
-      Examples:
-```hs
--- fmap fails here, because the function is wrapped
-Just (+10) <$> Just 5  -- Result: Error 
+    Just (+10) <*> Just 5  -- Result: Just 15
+    Nothing <*> Just 5  -- Result: Nothing
 
-Just (+10) <*> Just 5  -- Result: Just 15
-Nothing <*> Just 5  -- Result: Nothing
+    pure 5 :: Maybe Int   -- Output: Just 5
+    pure 5 :: [Int]   -- Output: [5]
 
-pure 5 :: Maybe Int   -- Output: Just 5
-pure 5 :: [Int]   -- Output: [5]
-
-```
-  ]  
-
+    ```
+  ],
 )
 #qa(
   [[V] What is a Monad? Which functions define it? ],
-
   [
-    A Monad *extends Applicative* typeclass. Monads allow to *chain dependent operations*, 
-    meaning the output of *step A directly determines what step B will look like*. 
-    In contrast, Applicative executes a series of independent operations that are ignorant to each other 
+    A Monad *extends Applicative* typeclass. Monads allow to *chain dependent operations*,
+    meaning the output of *step A directly determines what step B will look like*.
+    In contrast, Applicative executes a series of independent operations that are ignorant to each other
     until they are combined at the very end.
 
     *Core Functions*:
     1. *bind* (written as `>>=`): It feeds a boxed value to a function that returns a new box, without double-boxing.In the `do` notation , it is written with a arrow `<-`
-  
-    ```hs 
+
+    ```hs
      (>>=) :: m a -> (a -> m b) -> m b
     ```
     Example:
@@ -492,42 +470,42 @@ pure 5 :: [Int]   -- Output: [5]
     Nothing >>= (\x -> Just (x + 1))  --Output: Nothing
 
     Just 10 <*> (\x -> Just (x + 1))  --Output: Error (Applicative is not enough)
-    
+
     ```
     2. *>> operator*: >> chains two monadic actions together by running the first, discarding its value, and then running the second. This seems useless at first, but under the hood, every time you write a line in a do block without using `<-`, Haskell translates it to >> under the hood.
 
-  ```hs 
-  (>>) :: m a -> m b -> m b
+    ```hs
+    (>>) :: m a -> m b -> m b
 
-  ```
-  Example:
+    ```
+    Example:
     ```hs
 
---This is equvalent:
-main = do
-  putStrLn "Hello"
-  putStrLn "World"
+    --This is equvalent:
+    main = do
+      putStrLn "Hello"
+      putStrLn "World"
 
---to this:
-main = putStrLn "Hello" >> putStrLn "World"
+    --to this:
+    main = putStrLn "Hello" >> putStrLn "World"
     ```
 
-  3. *return*: the *same function as `pure`* in Applicative typeclass
-    
-    ```hs 
-return :: a -> m a
+    3. *return*: the *same function as `pure`* in Applicative typeclass
 
-    ```
+      ```hs
+      return :: a -> m a
 
-  Example from 1. rewritten with do notation.
-  
-  ```hs 
-successExample :: Maybe Int
-successExample = do
-  x <- Just 10      
-  return (x + 1) 
+      ```
+
+    Example from 1. rewritten with do notation.
+
+    ```hs
+    successExample :: Maybe Int
+    successExample = do
+      x <- Just 10
+      return (x + 1)
     ```
-  ]
+  ],
 )
 
 #qa(
@@ -535,23 +513,21 @@ successExample = do
   [
     *State Monads simulate mutable state* in pure functional programming.
     State is just a function that takes an initial state s, and returns a tuple containing the result a and a new state s.
-    ```hs 
-State s  a = s -> (a, s)
+    ```hs
+    State s  a = s -> (a, s)
     ```
     *Even though a student has only been asked about bind*, I highly recommend
-looking into State.hs provided in the official page. In my opinion, the question about bind open possibilities to be asked about different functions.
+    looking into State.hs provided in the official page. In my opinion, the question about bind open possibilities to be asked about different functions.
 
-```hs
-newtype State s a = S { runState :: s -> (a, s) }
+    ```hs
+    newtype State s a = S { runState :: s -> (a, s) }
 
-instance Monad (State s) where
-  -- (>>=) :: State s a -> (a -> State s b) -> State s b
-  stx >>= f = S (\s -> let (x, s') = runState stx s
-                       in runState (f x) s')
-
-```
-    
-  ]
+    instance Monad (State s) where
+      -- (>>=) :: State s a -> (a -> State s b) -> State s b
+      stx >>= f = S (\s -> let (x, s') = runState stx s
+                           in runState (f x) s')
+    ```
+  ],
 )
 
 #qa(
@@ -563,7 +539,7 @@ instance Monad (State s) where
 
     A semigroup $SS = (S, sun)$ is a set $S$ and an operation $sun : S times S -> S$ satisfying associativity,
     $
-    (x space sun space y) space sun space z = x space sun space (y space sun space z)
+      (x space sun space y) space sun space z = x space sun space (y space sun space z)
     $
     for all $x, y, z in S$. In Haskell, a semigroup is defined as
     ```hs
@@ -576,7 +552,7 @@ instance Monad (State s) where
 
     A monoid $MM = (M, sun, u)$ is the semigroup $(M, sun)$ satisfying
     $
-    u space sun space x = x = x space sun space u,
+      u space sun space x = x = x space sun space u,
     $
     for all $x in M$. In Haskell, a monoid is defined in the following way
     ```hs
@@ -593,9 +569,9 @@ instance Monad (State s) where
       ...
     ```
     The foldable class provides default implementations for many other useful functions besides `foldMap` such as `fold`, `length` etc.
-  ]
+  ],
 )
 
-*You are all done!* 
+*You are all done!*
 
 #image("resources/happy_cat.gif")
