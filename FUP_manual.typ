@@ -16,6 +16,8 @@
   lang: "en"
 )
 
+#set par(justify: true)
+
 #align(center)[
   #text(size: 24pt, weight: "bold")[FUP - Oral Exam] \
   #v(5mm)
